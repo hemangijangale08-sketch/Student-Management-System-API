@@ -1,0 +1,41 @@
+﻿using System.Net;
+using System.Text.Json;
+
+namespace StudentManagementAPI.Middleware
+{
+    public class ExceptionMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public ExceptionMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
+                await HandleException(context, ex);
+            }
+        }
+
+        private static async Task HandleException(HttpContext context, Exception ex)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 500;
+
+            var result = JsonSerializer.Serialize(new
+            {
+                success = false,
+                message = ex.Message
+            });
+
+            await context.Response.WriteAsync(result);
+        }
+    }
+}
