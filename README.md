@@ -43,7 +43,7 @@ Data/             → DbContext
 
 ---
 
-🔑 Demo Credentials
+🔑  Credentials
 
 Use the following credentials to test the API:
 Post/api/Auth/login
